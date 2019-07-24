@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+
+    <!--查询所有用户-->
+    <select id="selectAll1" resultType="User">
+        select user_id id,phone,password,salt,dharmaName,province,city,gender,personal_sign personalSign,profile,status,regist_time registTime from c_user
+    </select>
+    <!--添加用户-->
+    <insert id="insert">
+        insert into c_user values (#{id},#{phone},#{password},#{salt},#{dharmaName},#{province},#{city},#{gender},#{personalSign},#{profile},#{status},#{registTime})
+    </insert>
+    <!--删除用户-->
+    <delete id="delete">
+        delete from c_user where user_id=#{id}
+    </delete>
+    <!--修改用户-->
+    <update id="update">
+         update c_user set phone=#{phone},password=#{password},dharmaName=#{dharmaName},province=#{province},city=#{city},personal_sign=#{personalSign},gender=#{gender},status=#{status},regist_time=#{registTime} where user_id=#{id}
+    </update>
+    <update id="updateSatus">
+         update c_user set status=#{status} where user_id=#{id}
+    </update>
+    <!--修改路径-->
+    <update id="updateProfile">
+        update c_user set profile=#{profile} where user_id=#{id}
+    </update>
+    <!--用户登录-->
+    <select id="userLogin" resultType="User">
+       select user_id id,phone,password,salt,dharmaName,province,city,gender,personal_sign personalSign,profile,status,regist_time registTime from c_user
+              where phone =#{phone}
+    </select>
+    <!--用户注册-->
+    <!--添加-->
+    <insert id="regist" parameterType="User">
+        //profile,status,regist_time registTime
+        insert into t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!= null">
+                usr_id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="dharmaName != null">
+                dharmaName,
+            </if>
+            <if test="province!= null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="personalSign != null">
+                personal_sign,
+            </if>
+            <if test="profile != null">
+                profile,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="registTime != null">
+                regist_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="dharmaName != null">
+                #{dharmaName,jdbcType=DOUBLE},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=DATE},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=DATE},
+            </if>
+            <if test="personalSign != null">
+                #{personalSign,jdbcType=INTEGER},
+            </if>
+            <if test="profile != null">
+                #{profile,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="registTime != null">
+                #{registTime,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <select id="queryByMonth" resultType="CountMonth">
+        select count(*) count, left(regist_time,7) month from c_user GROUP BY left(regist_time,7)
+    </select>
+    <!--根据id查询-->
+    <select id="queryOne" resultType="User">
+         select phone,password,salt,dharmaName,province,city,gender,personal_sign personalSign,profile,status,regist_time registTime from c_user
+              where user_id =#{id}
+    </select>
+    <!--按照省分查询-->
+    <select id="selectByProvince" resultType="UserDto">
+        select province, count(*)count, gender from c_user group by  province
+    </select>
+</mapper>

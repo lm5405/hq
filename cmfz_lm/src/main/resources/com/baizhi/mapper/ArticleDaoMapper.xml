@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ArticleDao">
+
+    <resultMap id="res1" type="Article">
+    <id column="id" property="id"/>
+    <result column="aguruId" property="guruId"/>
+    <result column="atitle" property="title"/>
+    <result column="acontent" property="content"/>
+    <result column="publishTime" property="publishTime"/>
+    <association property="guru" javaType="Guru">
+        <id column="gid" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="profile" property="profile"></result>
+        <result column="status" property="status"></result>
+        <result column="sex" property="sex"></result>
+    </association>
+    </resultMap>
+
+    <select id="selectRecords" resultType="Integer">
+        select count(*) from c_article
+    </select>
+    <insert id="insert">
+         insert into c_article values(#{id},#{guruId},#{title},#{content},#{publishTime})
+    </insert>
+
+    <delete id="delete">
+        delete from c_article where article_id =#{id}
+    </delete>
+
+    <update id="update">
+        update c_article set title=#{title},guru_id=#{guruId},content=#{content},publish_Time=#{publishTime}
+           where article_id=#{id}
+    </update>
+
+    <select id="selectAll" resultType="Article">
+        select article_id id,guru_id guruId,title,content,publish_Time publishTime from c_article
+                 limit #{begin},#{rows}
+    </select>
+
+    <select id="selectAllByGuruId" resultType="Article">
+        select article_id id,guru_id guruId,title,content,publish_Time publishTime from c_article
+             where guru_id = #{guruId}
+    </select>
+
+    <select id="selectOneById" resultType="Article">
+        select a.article_id id,a.guru_id aguruId,a.title atitle,a.content acontent,a.publish_Time publishTime,
+                a.guru_id gid,g.name name,g.profile profile,g.status status,g.sex sex
+          from c_article a left join c_guru g on a.guru_id = g.guru_id
+              where  article_id=#{id}
+    </select>
+
+</mapper>
